@@ -8,7 +8,7 @@ window.addEventListener ("load", () => {
   function startGame() {
     let carretera = document.createElement("img");
     carretera.src = "images/road.png";
-    ctx.drawImage(carretera, 0, 0, 500, 650);
+    ctx.drawImage(carretera, 0, 0, 500, 700);
     let auto = document.createElement("img");
     auto.src = "images/car.png";
     ctx.fillStyle = "yellow"
@@ -25,10 +25,22 @@ window.addEventListener ("load", () => {
     class Obstaculo {
       constructor () {
         this.x = Math.floor(Math.random() * 300);
-        this. y = 0;
-        this.width = 200;
+        this. y = -30;
+        this.width = Math.floor(Math.random() *200)+150;
         this.height = 30;
       }
+      print (ctx) {
+        ctx.fillRect(bloque.x, bloque.y, bloque.width, bloque.height)
+      }
+    }
+    let score = 0;
+    let points = () => {
+      objetoSelected.forEach((bloque) => {
+        if (!(player.x + player.w < bloque.x || player.x > bloque.x + bloque.w || player.y + player.h < bloque.y || player.y > bloque.h + bloque.y)) {
+          score++
+        } else clearInterval(test);
+        
+      })
     }
     
     let objetoSelected = [];
@@ -36,28 +48,35 @@ window.addEventListener ("load", () => {
     
     let update = ()=>{
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.drawImage(carretera, 0, 0, 500, 650);
+      ctx.clearRect(0, 600, 500, 500);
+      ctx.drawImage(carretera, 0, 0, 500, 700);
       player.reprint()
       ctx.fillStyle = "yellow"
+      points()
       objetoSelected.forEach((bloque) => {
         ctx.fillRect(bloque.x, bloque.y, bloque.width, bloque.height)
         bloque.y += 5
       })
       if (dif > 2000 && dif < 3200) {
-        repeat+= 2
-      } else if (dif > 3200)
-        repeat++
+        repeat+= 2;
+        score++;
+      } else if (dif > 3200) {
+      repeat++;
+      score +=5;
+      }
       if (repeat >= 185) {
         repeat = 0;
         let obj = new Obstaculo;
         objetoSelected.push(obj);
       }
-      console.log(repeat)
-      
+      //ctx.fillStyle = "black";
+      ctx.font = "25px Arial";
+      ctx.fillText(`Score: ${score}`,65, 50);
+      //ctx.drawImage(auto, player.x, 500, 50, 50); 
     } 
     let repeat = 0;
     let dif = 0;
-    setInterval (() => {
+    let test = setInterval (() => {
       repeat++
       dif++
       update()
@@ -80,8 +99,6 @@ window.addEventListener ("load", () => {
     }
   });
   
-  //ctx.fillStyle = "black";
-    //ctx.font = "16px Arial";
-    //ctx.fillText(`Score: ${puntos}`,150, 150);
-   // ctx.drawImage(auto, player.x, 500, 70, 125);
+
+
   
